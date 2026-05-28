@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f3f6ff;
+}
+
+/* Print: force A4 pages and clean output */
+@media print {
+  /* Mixed orientation printing */
+  @page portrait {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+  @page landscape {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ensure our A4 sheets paginate cleanly */
+  .a4-page {
+    margin: 0;
+    padding: 0;
+    break-after: page;
+    page-break-after: always;
+  }
+  .a4-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .a4-page--portrait {
+    page: portrait;
+    width: 210mm;
+    min-height: 297mm;
+  }
+
+  .a4-page--landscape {
+    page: landscape;
+    width: 297mm;
+    min-height: 210mm;
+  }
+}
