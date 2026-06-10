@@ -62,7 +62,6 @@ function TraceSheet({ words }: { words: string[] }) {
                 {w}
               </span>
             </div>
-
             <div className="space-y-4">
               <div className="relative">
                 <div className="absolute left-0 top-[7px] select-none text-3xl font-black tracking-wide text-slate-300/70">
@@ -74,7 +73,6 @@ function TraceSheet({ words }: { words: string[] }) {
                   <div className="mt-[18px] h-0 border-t-2 border-slate-500/50" />
                 </div>
               </div>
-
               <div className="h-12">
                 <div className="h-0 border-t-2 border-slate-500/50" />
                 <div className="mt-[18px] h-0 border-t-2 border-dashed border-rose-400/70" />
@@ -187,7 +185,7 @@ function WordSearchAnswerSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
               >
                 <span className="font-bold text-slate-800">{placement.word}</span>
                 <span className="text-slate-500">
-                  R{placement.start.r + 1}C{placement.start.c + 1} → R
+                  R{placement.start.r + 1}C{placement.start.c + 1} to R
                   {placement.end.r + 1}C{placement.end.c + 1}
                 </span>
               </div>
@@ -220,7 +218,6 @@ function CrosswordSheet({ words }: { words: string[] }) {
           Fill in the crossword using the word bank below.
         </p>
       </div>
-
       <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-slate-200 pt-3 text-sm text-slate-600">
         <div className="flex min-w-56 items-center gap-2">
           <span className="font-semibold">Name:</span>
@@ -231,7 +228,6 @@ function CrosswordSheet({ words }: { words: string[] }) {
           <span className="min-w-32 flex-1 border-b border-slate-300">&nbsp;</span>
         </div>
       </div>
-
       <div className="mt-5 flex justify-center">
         <div className="rounded-lg border-2 border-slate-800 bg-slate-100 p-4">
           <div
@@ -261,7 +257,6 @@ function CrosswordSheet({ words }: { words: string[] }) {
           </div>
         </div>
       </div>
-
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <div>
           <div className="mb-2 text-sm font-extrabold text-slate-900">ACROSS</div>
@@ -275,7 +270,6 @@ function CrosswordSheet({ words }: { words: string[] }) {
             ))}
           </div>
         </div>
-
         <div>
           <div className="mb-2 text-sm font-extrabold text-slate-900">DOWN</div>
           <div className="h-0 border-t-2 border-slate-900/80" />
@@ -289,7 +283,6 @@ function CrosswordSheet({ words }: { words: string[] }) {
           </div>
         </div>
       </div>
-
       <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-bold text-slate-700">Word Bank</p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -330,12 +323,11 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
         onClick={onClose}
         aria-hidden="true"
       />
-
       <div className="worksheet-modal-panel absolute inset-x-0 bottom-0 top-3 mx-auto w-full max-w-6xl px-2 pb-3 sm:top-8 sm:px-4 sm:pb-6">
         <div className="worksheet-modal-shell flex h-full flex-col overflow-hidden rounded-lg bg-[#f7f8fb] shadow-2xl ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 border-b border-slate-200/70 bg-white px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6 print:hidden">
             <div>
-              <p className="text-xs font-bold text-slate-500">미리보기</p>
+              <p className="text-xs font-bold text-slate-500">Preview</p>
               <h2 className="mt-1 text-sm font-extrabold text-slate-900">{title}</h2>
             </div>
             <div className="flex items-center gap-2">
@@ -345,13 +337,13 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
                 disabled={!canGenerate}
                 className="flex-1 rounded-md bg-slate-900 px-3 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-slate-200 sm:flex-none"
               >
-                인쇄 / PDF 저장
+                Print / Save PDF
               </button>
               <button
                 type="button"
                 onClick={onClose}
                 className="grid h-10 w-10 place-items-center rounded-md bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                aria-label="닫기"
+                aria-label="Close"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
                   <path
@@ -362,20 +354,19 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
               </button>
             </div>
           </div>
-
           <div className="worksheet-preview flex-1 overflow-auto bg-[#f7f8fb] px-3 py-4 sm:px-6 sm:py-5">
             {!canGenerate ? (
               <div className="grid place-items-center rounded-lg bg-white p-8 text-center ring-1 ring-slate-200">
                 <p className="text-sm font-extrabold text-slate-900">
-                  단어를 최소 {MIN_WORDS}개 이상 입력해주세요.
+                  Add at least {MIN_WORDS} words to generate a worksheet.
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
-                  입력 카드에서 단어를 추가한 뒤 다시 미리보기를 열 수 있습니다.
+                  Add words in the input card, then open the preview again.
                 </p>
               </div>
             ) : (
               <div className="worksheet-pages mx-auto flex w-full max-w-[860px] flex-col gap-6 py-2">
-                <PageFrame pageLabel="1/4" pageTitle="영어 단어 학습지">
+                <PageFrame pageLabel="1/4" pageTitle="English Worksheet">
                   <TraceSheet words={words} />
                 </PageFrame>
                 <PageFrame pageLabel="2/4" pageTitle="Crossword Puzzle">
