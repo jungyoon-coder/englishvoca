@@ -181,13 +181,9 @@ function WordSearchAnswerSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
             {puzzle.placements.map((placement) => (
               <div
                 key={placement.word}
-                className="flex items-center justify-between gap-3 rounded-md bg-white px-3 py-2 text-xs ring-1 ring-blue-100"
+                className="rounded-md bg-white px-3 py-2 text-xs ring-1 ring-blue-100"
               >
                 <span className="font-bold text-slate-800">{placement.word}</span>
-                <span className="text-slate-500">
-                  R{placement.start.r + 1}C{placement.start.c + 1} to R
-                  {placement.end.r + 1}C{placement.end.c + 1}
-                </span>
               </div>
             ))}
           </div>
