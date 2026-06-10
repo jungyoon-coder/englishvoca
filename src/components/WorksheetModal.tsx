@@ -121,7 +121,7 @@ function WordSearchGrid({
                 className={[
                   'grid place-items-center border text-[12px] font-extrabold leading-none',
                   isAnswer
-                    ? 'border-emerald-500 bg-emerald-100 text-emerald-900'
+                    ? 'border-blue-500 bg-blue-100 text-blue-900'
                     : 'border-slate-100 text-slate-800',
                 ].join(' ')}
               >
@@ -149,12 +149,6 @@ function WordSearchWordList({ puzzle }: { puzzle: WordSearchPuzzle }) {
           </span>
         ))}
       </div>
-      {puzzle.skipped.length > 0 ? (
-        <p className="mt-3 text-[11px] text-slate-500">
-          Some words were skipped because of length or placement limits:{' '}
-          {puzzle.skipped.join(', ')}
-        </p>
-      ) : null}
     </div>
   )
 }
@@ -166,7 +160,6 @@ function WordSearchSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
         title="Word Search"
         subtitle="Find each word in the grid and circle it."
       />
-
       <div className="grid gap-5">
         <WordSearchGrid puzzle={puzzle} />
         <WordSearchWordList puzzle={puzzle} />
@@ -182,16 +175,15 @@ function WordSearchAnswerSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
         title="Word Search Answer"
         subtitle="Highlighted cells show every hidden word for quick grading."
       />
-
       <div className="grid gap-5">
         <WordSearchGrid puzzle={puzzle} answer />
-        <div className="rounded-lg bg-emerald-50 p-4 ring-1 ring-emerald-100">
-          <p className="text-xs font-extrabold text-emerald-800">Answer key</p>
+        <div className="rounded-lg bg-blue-50 p-4 ring-1 ring-blue-100">
+          <p className="text-xs font-extrabold text-blue-800">Answer key</p>
           <div className="mt-2 grid gap-2 sm:grid-cols-2">
             {puzzle.placements.map((placement) => (
               <div
                 key={placement.word}
-                className="flex items-center justify-between gap-3 rounded-md bg-white px-3 py-2 text-xs ring-1 ring-emerald-100"
+                className="flex items-center justify-between gap-3 rounded-md bg-white px-3 py-2 text-xs ring-1 ring-blue-100"
               >
                 <span className="font-bold text-slate-800">{placement.word}</span>
                 <span className="text-slate-500">
@@ -358,7 +350,7 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
               <button
                 type="button"
                 onClick={onClose}
-                className="grid h-10 w-10 place-items-center rounded-md bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
+                className="grid h-10 w-10 place-items-center rounded-md bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
                 aria-label="닫기"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">

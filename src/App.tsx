@@ -82,8 +82,8 @@ function App() {
   const clearAll = () => setWords([])
 
   return (
-    <div className="min-h-dvh bg-[#f7f8fb] px-4 py-5 text-slate-800 sm:py-8 print:min-h-0 print:bg-white print:p-0">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 sm:gap-5 print:hidden">
+    <div className="min-h-dvh bg-[#f8fafc] px-4 py-6 text-slate-800 sm:px-6 sm:py-10 print:min-h-0 print:bg-white print:p-0">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 print:hidden">
         <PageHeader />
 
         <WordInputCard
@@ -95,39 +95,45 @@ function App() {
           onGenerate={() => setIsModalOpen(true)}
         />
 
-        <SuggestedWords
-          title="추천 단어"
-          words={SUGGESTED_WORDS}
-          disabled={words.length >= MAX_WORDS}
-          onPick={addWord}
-        />
+        <details className="group rounded-2xl bg-white/70 px-4 py-3 shadow-sm ring-1 ring-slate-200/80 backdrop-blur">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-slate-600 outline-none transition hover:text-slate-950">
+            <span>단어 예시와 빠른 세트</span>
+            <span className="text-xs text-slate-400 transition group-open:rotate-180">⌄</span>
+          </summary>
+          <div className="mt-4 grid gap-4 border-t border-slate-100 pt-4 lg:grid-cols-2">
+            <SuggestedWords
+              title="추천 단어"
+              words={SUGGESTED_WORDS}
+              disabled={words.length >= MAX_WORDS}
+              onPick={addWord}
+            />
 
-        <section className="rounded-lg bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 sm:px-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-sm font-extrabold text-slate-900">수업 주제 빠른 추가</h3>
-              <p className="mt-1 text-xs text-slate-500">
-                자주 쓰는 단어 묶음을 눌러 학습지를 빠르게 준비하세요.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {QUICK_SETS.map((set) => (
-                <button
-                  key={set.title}
-                  type="button"
-                  disabled={words.length >= MAX_WORDS}
-                  onClick={() => addQuickSet(set.words)}
-                  className="rounded-md bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-100 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
-                >
-                  {set.title}
-                </button>
-              ))}
-            </div>
+            <section>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                  빠른 세트
+                </h3>
+                <span className="text-xs text-slate-400">한 번에 추가</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {QUICK_SETS.map((set) => (
+                  <button
+                    key={set.title}
+                    type="button"
+                    disabled={words.length >= MAX_WORDS}
+                    onClick={() => addQuickSet(set.words)}
+                    className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200/80 transition hover:bg-white hover:text-slate-950 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                  >
+                    {set.title}
+                  </button>
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
+        </details>
 
-        <p className="text-center text-xs text-slate-500">
-          입력한 단어는 브라우저에만 임시로 보관됩니다. 새로고침하면 초기화됩니다.
+        <p className="text-center text-xs text-slate-400">
+          입력한 단어는 브라우저에만 임시로 보관됩니다.
         </p>
       </div>
 
