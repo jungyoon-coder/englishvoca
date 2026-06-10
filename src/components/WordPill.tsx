@@ -3,25 +3,9 @@ type Props = {
   onRemove: () => void
 }
 
-const WORD_ICONS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-
-function pickIcon(word: string) {
-  let hash = 0
-  for (let i = 0; i < word.length; i++) hash = (hash * 31 + word.charCodeAt(i)) >>> 0
-  return WORD_ICONS[hash % WORD_ICONS.length]
-}
-
 export function WordPill({ word, onRemove }: Props) {
-  const icon = pickIcon(word)
-
   return (
     <span className="inline-flex items-center gap-2 rounded-md bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-100">
-      <span
-        aria-hidden="true"
-        className="grid h-5 w-5 place-items-center rounded bg-emerald-100 text-[11px] font-black text-emerald-700"
-      >
-        {icon}
-      </span>
       <span className="tracking-wide">{word}</span>
       <button
         type="button"

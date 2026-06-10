@@ -56,11 +56,8 @@ function TraceSheet({ words }: { words: string[] }) {
       <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
         {items.map((w, idx) => (
           <div key={w}>
-            <div className="mb-2 flex items-center gap-3">
+            <div className="mb-2 flex items-baseline gap-2">
               <span className="text-sm font-bold text-slate-600">{idx + 1}.</span>
-              <span className="grid h-8 w-8 place-items-center rounded bg-emerald-100 text-sm font-black text-emerald-700">
-                {w[0]?.toUpperCase()}
-              </span>
               <span className="text-2xl font-black tracking-tight text-slate-900">
                 {w}
               </span>
