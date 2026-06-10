@@ -74,6 +74,10 @@ function makeGrid(n: number) {
   return Array.from({ length: n }, () => Array.from({ length: n }, () => ''))
 }
 
+function cloneGrid(grid: string[][]) {
+  return grid.map((row) => row.slice())
+}
+
 function inBounds(size: number, r: number, c: number) {
   return r >= 0 && c >= 0 && r < size && c < size
 }
@@ -117,6 +121,32 @@ function getCandidates(grid: string[][], word: string, rnd: () => number) {
   return shuffle(candidates, rnd).sort((a, b) => b.overlap - a.overlap)
 }
 
+function countWordOccurrences(grid: string[][], word: string) {
+  let count = 0
+  for (let r = 0; r < grid.length; r++) {
+    for (let c = 0; c < grid.length; c++) {
+      for (const dir of DIRS) {
+        const cells = getCells(grid.length, word, r, c, dir)
+        if (!cells) continue
+        let ok = true
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i]
+          if (grid[cell.r][cell.c] !== word[i]) {
+            ok = false
+            break
+          }
+        }
+        if (ok) count++
+      }
+    }
+  }
+  return count
+}
+
+function hasTooManyOccurrences(grid: string[][], words: string[]) {
+  return words.some((word) => countWordOccurrences(grid, word) > 1)
+}
+
 function place(grid: string[][], candidate: Candidate): WordSearchPlacement {
   const cells = getCells(grid.length, candidate.word, candidate.r, candidate.c, candidate.dir)
   if (!cells) {
@@ -142,7 +172,11 @@ function buildGreedy(words: string[], size: number, rnd: () => number) {
 
   for (const word of words) {
     const candidates = getCandidates(grid, word, rnd)
-    const candidate = candidates[0]
+    const candidate = candidates.find((item) => {
+      const nextGrid = cloneGrid(grid)
+      place(nextGrid, item)
+      return countWordOccurrences(nextGrid, item.word) === 1 && !hasTooManyOccurrences(nextGrid, words)
+    })
     if (!candidate) return null
     placements.push(place(grid, candidate))
   }
@@ -161,13 +195,27 @@ function buildGuaranteedRows(words: string[], size: number) {
   return { grid, placements }
 }
 
-function fillEmptyCells(grid: string[][], rnd: () => number) {
+function fillEmptyCells(grid: string[][], words: string[], rnd: () => number) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   for (let r = 0; r < grid.length; r++) {
     for (let c = 0; c < grid.length; c++) {
-      if (grid[r][c] === '') grid[r][c] = alphabet[randInt(alphabet.length, rnd)]
+      if (grid[r][c] !== '') continue
+
+      const letters = shuffle(alphabet.split(''), rnd)
+      const safeLetter = letters.find((letter) => {
+        grid[r][c] = letter
+        const safe = !hasTooManyOccurrences(grid, words)
+        grid[r][c] = ''
+        return safe
+      })
+
+      grid[r][c] = safeLetter ?? letters[0]
     }
   }
+}
+
+function isExactPuzzle(grid: string[][], words: string[]) {
+  return words.every((word) => countWordOccurrences(grid, word) === 1)
 }
 
 export function generateWordSearch(words: string[], requestedSize: number): WordSearchPuzzle {
@@ -194,20 +242,27 @@ export function generateWordSearch(words: string[], requestedSize: number): Word
   let finalSize = baseSize
 
   for (let size = baseSize; size <= baseSize + 4; size++) {
-    const rnd = mulberry32(seed + size * 997)
-    built = buildGreedy(cleaned, size, rnd)
-    if (built) {
+    for (let attempt = 0; attempt < 24; attempt++) {
+      const rnd = mulberry32(seed + size * 997 + attempt * 37)
+      const candidate = buildGreedy(cleaned, size, rnd)
+      if (!candidate) continue
+      fillEmptyCells(candidate.grid, cleaned, mulberry32(seed + size * 1543 + attempt * 53))
+      if (!isExactPuzzle(candidate.grid, cleaned)) continue
+      built = candidate
       finalSize = size
       break
     }
+    if (built) break
   }
 
   if (!built) {
-    finalSize = baseSize
+    finalSize = Math.max(baseSize, cleaned.length)
     built = buildGuaranteedRows(cleaned, finalSize)
+    fillEmptyCells(built.grid, cleaned, mulberry32(seed + finalSize * 1543))
+    if (!isExactPuzzle(built.grid, cleaned)) {
+      throw new Error('Unable to generate an exact word search puzzle for the provided words.')
+    }
   }
-
-  fillEmptyCells(built.grid, mulberry32(seed + finalSize * 1543))
 
   return {
     size: finalSize,
