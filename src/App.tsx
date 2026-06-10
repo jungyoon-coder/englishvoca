@@ -82,8 +82,8 @@ function App() {
   const clearAll = () => setWords([])
 
   return (
-    <div className="min-h-dvh bg-[#f7f8fb] px-4 py-6 text-slate-800 sm:py-10">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 sm:gap-6">
+    <div className="min-h-dvh bg-[#f7f8fb] px-4 py-6 text-slate-800 sm:py-10 print:min-h-0 print:bg-white print:p-0">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 sm:gap-6 print:hidden">
         <PageHeader />
 
         <WordInputCard

@@ -21,37 +21,19 @@ function SectionTitle({ title, subtitle }: { title: string; subtitle?: string })
 
 function PageFrame({
   pageLabel,
-  orientation,
+  pageTitle,
   children,
 }: {
   pageLabel: string
-  orientation: 'portrait' | 'landscape'
+  pageTitle: string
   children: ReactNode
 }) {
-  const pageClass =
-    orientation === 'portrait' ? 'a4-page--portrait' : 'a4-page--landscape'
-  const aspect =
-    orientation === 'portrait' ? 'aspect-[210/297]' : 'aspect-[297/210]'
-
   return (
-    <section
-      className={[
-        'a4-page',
-        pageClass,
-        'mx-auto w-full',
-        orientation === 'portrait' ? 'max-w-[794px]' : 'max-w-[1123px]',
-      ].join(' ')}
-    >
-      <div
-        className={[
-          'rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6',
-          'print:rounded-none print:shadow-none print:ring-0',
-          aspect,
-        ].join(' ')}
-      >
+    <section className="a4-page mx-auto w-full max-w-[794px]">
+      <div className="a4-sheet aspect-[210/297] rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
         <div className="mb-5 flex items-start justify-between gap-3">
           <p className="text-xs font-bold text-slate-500">{pageLabel}</p>
-          <p className="text-right text-xs font-bold text-slate-500">영어 단어 학습지</p>
+          <p className="text-right text-xs font-bold text-slate-500">{pageTitle}</p>
         </div>
         {children}
       </div>
@@ -114,8 +96,8 @@ function WordSearchSheet({ words }: { words: string[] }) {
   return (
     <div>
       <SectionTitle
-        title="단어 찾기"
-        subtitle="표 안에서 단어를 찾아 동그라미로 표시해보세요."
+        title="Word Search"
+        subtitle="Find each word in the grid and circle it."
       />
 
       <div className="space-y-5">
@@ -135,7 +117,7 @@ function WordSearchSheet({ words }: { words: string[] }) {
         </div>
 
         <div className="rounded-lg bg-slate-50 p-4 ring-1 ring-slate-200">
-          <p className="text-xs font-extrabold text-slate-700">찾을 단어</p>
+          <p className="text-xs font-extrabold text-slate-700">Words to find</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {puzzle.placed.map((w) => (
               <span
@@ -148,7 +130,8 @@ function WordSearchSheet({ words }: { words: string[] }) {
           </div>
           {puzzle.skipped.length > 0 ? (
             <p className="mt-3 text-[11px] text-slate-500">
-              일부 단어는 길이 또는 배치 조건으로 제외되었습니다: {puzzle.skipped.join(', ')}
+              Some words were skipped because of length or placement limits:{' '}
+              {puzzle.skipped.join(', ')}
             </p>
           ) : null}
         </div>
@@ -190,8 +173,8 @@ function CrosswordSheet({ words }: { words: string[] }) {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-center">
-        <div className="rounded-lg border-2 border-slate-800 bg-slate-100 p-4 sm:p-6">
+      <div className="mt-5 flex justify-center">
+        <div className="rounded-lg border-2 border-slate-800 bg-slate-100 p-4">
           <div
             className="grid bg-transparent"
             style={{
@@ -220,7 +203,7 @@ function CrosswordSheet({ words }: { words: string[] }) {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-8 sm:grid-cols-2">
+      <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <div>
           <div className="mb-2 text-sm font-extrabold text-slate-900">ACROSS</div>
           <div className="h-0 border-t-2 border-slate-900/80" />
@@ -248,7 +231,7 @@ function CrosswordSheet({ words }: { words: string[] }) {
         </div>
       </div>
 
-      <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-bold text-slate-700">Word Bank</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {wordBank.map((w) => (
@@ -262,7 +245,7 @@ function CrosswordSheet({ words }: { words: string[] }) {
         </div>
         {puzzle.skippedWords.length > 0 ? (
           <p className="mt-3 text-[11px] text-slate-500">
-            십자말에 들어가지 못한 단어: {puzzle.skippedWords.join(', ')}
+            Words not placed in the crossword: {puzzle.skippedWords.join(', ')}
           </p>
         ) : null}
       </div>
@@ -280,15 +263,15 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
   }, [onClose])
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="worksheet-modal fixed inset-0 z-50">
       <div
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm print:hidden"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <div className="absolute inset-x-0 bottom-0 top-3 mx-auto w-full max-w-6xl px-2 pb-3 sm:top-8 sm:px-4 sm:pb-6 print:static print:inset-auto print:max-w-none print:px-0 print:pb-0">
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-[#f7f8fb] shadow-2xl ring-1 ring-slate-200 print:overflow-visible print:rounded-none print:bg-white print:shadow-none print:ring-0">
+      <div className="worksheet-modal-panel absolute inset-x-0 bottom-0 top-3 mx-auto w-full max-w-6xl px-2 pb-3 sm:top-8 sm:px-4 sm:pb-6">
+        <div className="worksheet-modal-shell flex h-full flex-col overflow-hidden rounded-xl bg-[#f7f8fb] shadow-2xl ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 border-b border-slate-200/70 bg-white px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6 print:hidden">
             <div>
               <p className="text-xs font-bold text-slate-500">미리보기</p>
@@ -319,7 +302,7 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto bg-[#f7f8fb] px-3 py-4 sm:px-6 sm:py-5 print:overflow-visible print:bg-white print:px-0 print:py-0">
+          <div className="worksheet-preview flex-1 overflow-auto bg-[#f7f8fb] px-3 py-4 sm:px-6 sm:py-5">
             {!canGenerate ? (
               <div className="grid place-items-center rounded-xl bg-white p-8 text-center ring-1 ring-slate-200">
                 <p className="text-sm font-extrabold text-slate-900">
@@ -330,19 +313,15 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
                 </p>
               </div>
             ) : (
-              <div className="mx-auto flex w-full max-w-[860px] flex-col gap-6 py-2 print:max-w-none print:gap-0 print:py-0">
-                <PageFrame pageLabel="1/2" orientation="portrait">
+              <div className="worksheet-pages mx-auto flex w-full max-w-[860px] flex-col gap-6 py-2">
+                <PageFrame pageLabel="1/3" pageTitle="영어 단어 학습지">
                   <TraceSheet words={words} />
                 </PageFrame>
-                <PageFrame pageLabel="2/2" orientation="landscape">
-                  <div className="grid gap-6 lg:grid-cols-2">
-                    <div className="min-w-0">
-                      <CrosswordSheet words={words} />
-                    </div>
-                    <div className="min-w-0">
-                      <WordSearchSheet words={words} />
-                    </div>
-                  </div>
+                <PageFrame pageLabel="2/3" pageTitle="Crossword Puzzle">
+                  <CrosswordSheet words={words} />
+                </PageFrame>
+                <PageFrame pageLabel="3/3" pageTitle="Word Search">
+                  <WordSearchSheet words={words} />
                 </PageFrame>
               </div>
             )}

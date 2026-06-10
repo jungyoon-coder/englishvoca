@@ -15,44 +15,76 @@ body {
 
 /* Print: force A4 pages and clean output */
 @media print {
-  /* Mixed orientation printing */
-  @page portrait {
+  @page {
     size: A4 portrait;
-    margin: 12mm;
-  }
-  @page landscape {
-    size: A4 landscape;
     margin: 10mm;
   }
 
   html,
   body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
     background: #ffffff !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  /* Ensure our A4 sheets paginate cleanly */
+  #root {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .worksheet-modal,
+  .worksheet-modal-panel,
+  .worksheet-modal-shell,
+  .worksheet-preview,
+  .worksheet-pages {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+  }
+
   .a4-page {
-    margin: 0;
-    padding: 0;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
     break-after: page;
     page-break-after: always;
   }
+
   .a4-page:last-child {
     break-after: auto;
     page-break-after: auto;
   }
 
-  .a4-page--portrait {
-    page: portrait;
-    width: 210mm;
-    min-height: 297mm;
-  }
-
-  .a4-page--landscape {
-    page: landscape;
-    width: 297mm;
-    min-height: 210mm;
+  .a4-sheet {
+    width: 100% !important;
+    min-height: 277mm !important;
+    aspect-ratio: auto !important;
+    box-sizing: border-box !important;
+    padding: 8mm !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
