@@ -15,7 +15,7 @@ export function WordPill({ word, onRemove }: Props) {
   const icon = pickIcon(word)
 
   return (
-    <span className="inline-flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-100">
+    <span className="inline-flex items-center gap-2 rounded-md bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-100">
       <span
         aria-hidden="true"
         className="grid h-5 w-5 place-items-center rounded bg-emerald-100 text-[11px] font-black text-emerald-700"

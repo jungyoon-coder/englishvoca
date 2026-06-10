@@ -1,11 +1,25 @@
+export type WordSearchCell = {
+  r: number
+  c: number
+}
+
+export type WordSearchPlacement = {
+  word: string
+  start: WordSearchCell
+  end: WordSearchCell
+  cells: WordSearchCell[]
+}
+
 export type WordSearchPuzzle = {
   size: number
   grid: string[][]
   placed: string[]
   skipped: string[]
+  placements: WordSearchPlacement[]
 }
 
 type Dir = { dr: number; dc: number }
+
 const DIRS: Dir[] = [
   { dr: 0, dc: 1 },
   { dr: 1, dc: 0 },
@@ -17,12 +31,31 @@ const DIRS: Dir[] = [
   { dr: -1, dc: -1 },
 ]
 
-function randInt(maxExclusive: number) {
-  return Math.floor(Math.random() * maxExclusive)
+function hashWords(words: string[]) {
+  const source = words.join('|')
+  let hash = 2166136261
+  for (let i = 0; i < source.length; i++) {
+    hash ^= source.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
 }
 
-function sample<T>(arr: T[]) {
-  return arr[randInt(arr.length)]
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5)
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function randInt(maxExclusive: number, rnd: () => number) {
+  return Math.floor(rnd() * maxExclusive)
+}
+
+function sample<T>(arr: T[], rnd: () => number) {
+  return arr[randInt(arr.length, rnd)]
 }
 
 function canPlace(grid: string[][], word: string, r: number, c: number, dir: Dir) {
@@ -38,8 +71,18 @@ function canPlace(grid: string[][], word: string, r: number, c: number, dir: Dir
 }
 
 function place(grid: string[][], word: string, r: number, c: number, dir: Dir) {
+  const cells: WordSearchCell[] = []
   for (let i = 0; i < word.length; i++) {
-    grid[r + dir.dr * i][c + dir.dc * i] = word[i]
+    const cell = { r: r + dir.dr * i, c: c + dir.dc * i }
+    grid[cell.r][cell.c] = word[i]
+    cells.push(cell)
+  }
+
+  return {
+    word,
+    start: cells[0],
+    end: cells[cells.length - 1],
+    cells,
   }
 }
 
@@ -53,32 +96,36 @@ export function generateWordSearch(words: string[], size: number): WordSearchPuz
     .filter(Boolean)
     .sort((a, b) => b.length - a.length)
 
+  const rnd = mulberry32(hashWords(cleaned))
   const grid = makeGrid(size)
   const placed: string[] = []
   const skipped: string[] = []
+  const placements: WordSearchPlacement[] = []
 
   for (const word of cleaned) {
-    let ok = false
+    let placement: WordSearchPlacement | null = null
     for (let attempt = 0; attempt < 180; attempt++) {
-      const dir = sample(DIRS)
-      const r = randInt(size)
-      const c = randInt(size)
+      const dir = sample(DIRS, rnd)
+      const r = randInt(size, rnd)
+      const c = randInt(size, rnd)
       if (!canPlace(grid, word, r, c, dir)) continue
-      place(grid, word, r, c, dir)
-      ok = true
+      placement = place(grid, word, r, c, dir)
       break
     }
-    if (ok) placed.push(word)
-    else skipped.push(word)
+    if (placement) {
+      placed.push(word)
+      placements.push(placement)
+    } else {
+      skipped.push(word)
+    }
   }
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      if (grid[r][c] === '') grid[r][c] = alphabet[randInt(alphabet.length)]
+      if (grid[r][c] === '') grid[r][c] = alphabet[randInt(alphabet.length, rnd)]
     }
   }
 
-  return { size, grid, placed, skipped }
+  return { size, grid, placed, skipped, placements }
 }
-

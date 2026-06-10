@@ -1,6 +1,6 @@
 import { useEffect, useMemo, type ReactNode } from 'react'
 import { generateCrossword } from '../utils/crossword'
-import { generateWordSearch } from '../utils/wordSearch'
+import { generateWordSearch, type WordSearchPuzzle } from '../utils/wordSearch'
 import { MIN_WORDS } from '../utils/words'
 
 type Props = {
@@ -30,8 +30,8 @@ function PageFrame({
 }) {
   return (
     <section className="a4-page mx-auto w-full max-w-[794px]">
-      <div className="a4-sheet aspect-[210/297] rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
-        <div className="mb-5 flex items-start justify-between gap-3">
+      <div className="a4-sheet aspect-[210/297] rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+        <div className="mb-5 flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
           <p className="text-xs font-bold text-slate-500">{pageLabel}</p>
           <p className="text-right text-xs font-bold text-slate-500">{pageTitle}</p>
         </div>
@@ -91,8 +91,78 @@ function TraceSheet({ words }: { words: string[] }) {
   )
 }
 
-function WordSearchSheet({ words }: { words: string[] }) {
-  const puzzle = useMemo(() => generateWordSearch(words, 12), [words])
+function WordSearchGrid({
+  puzzle,
+  answer = false,
+}: {
+  puzzle: WordSearchPuzzle
+  answer?: boolean
+}) {
+  const answerCells = useMemo(() => {
+    const cells = new Set<string>()
+    for (const placement of puzzle.placements) {
+      for (const cell of placement.cells) cells.add(`${cell.r}-${cell.c}`)
+    }
+    return cells
+  }, [puzzle.placements])
+
+  return (
+    <div className="mx-auto w-fit overflow-hidden rounded-md ring-1 ring-slate-300">
+      <div
+        className="grid bg-white"
+        style={{
+          gridTemplateColumns: `repeat(${puzzle.size}, 24px)`,
+          gridAutoRows: '24px',
+        }}
+      >
+        {puzzle.grid.flatMap((row, r) =>
+          row.map((ch, c) => {
+            const isAnswer = answer && answerCells.has(`${r}-${c}`)
+            return (
+              <div
+                key={`${r}-${c}`}
+                className={[
+                  'grid place-items-center border text-[12px] font-extrabold leading-none',
+                  isAnswer
+                    ? 'border-emerald-500 bg-emerald-100 text-emerald-900'
+                    : 'border-slate-100 text-slate-800',
+                ].join(' ')}
+              >
+                {ch}
+              </div>
+            )
+          }),
+        )}
+      </div>
+    </div>
+  )
+}
+
+function WordSearchWordList({ puzzle }: { puzzle: WordSearchPuzzle }) {
+  return (
+    <div className="rounded-lg bg-slate-50 p-4 ring-1 ring-slate-200">
+      <p className="text-xs font-extrabold text-slate-700">Words</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {puzzle.placed.map((w) => (
+          <span
+            key={w}
+            className="rounded-md bg-white px-3 py-1.5 text-xs font-bold text-slate-700 ring-1 ring-slate-200"
+          >
+            {w}
+          </span>
+        ))}
+      </div>
+      {puzzle.skipped.length > 0 ? (
+        <p className="mt-3 text-[11px] text-slate-500">
+          Some words were skipped because of length or placement limits:{' '}
+          {puzzle.skipped.join(', ')}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
+function WordSearchSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
   return (
     <div>
       <SectionTitle
@@ -100,40 +170,40 @@ function WordSearchSheet({ words }: { words: string[] }) {
         subtitle="Find each word in the grid and circle it."
       />
 
-      <div className="space-y-5">
-        <div className="overflow-hidden rounded-lg ring-1 ring-slate-200">
-          <div className="grid grid-cols-12 bg-white">
-            {puzzle.grid.flatMap((row, r) =>
-              row.map((ch, c) => (
-                <div
-                  key={`${r}-${c}`}
-                  className="grid aspect-square place-items-center border border-slate-100 text-sm font-extrabold text-slate-800"
-                >
-                  {ch}
-                </div>
-              )),
-            )}
-          </div>
-        </div>
+      <div className="grid gap-5">
+        <WordSearchGrid puzzle={puzzle} />
+        <WordSearchWordList puzzle={puzzle} />
+      </div>
+    </div>
+  )
+}
 
-        <div className="rounded-lg bg-slate-50 p-4 ring-1 ring-slate-200">
-          <p className="text-xs font-extrabold text-slate-700">Words to find</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {puzzle.placed.map((w) => (
-              <span
-                key={w}
-                className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-slate-700 ring-1 ring-slate-200"
+function WordSearchAnswerSheet({ puzzle }: { puzzle: WordSearchPuzzle }) {
+  return (
+    <div>
+      <SectionTitle
+        title="Word Search Answer"
+        subtitle="Highlighted cells show every hidden word for quick grading."
+      />
+
+      <div className="grid gap-5">
+        <WordSearchGrid puzzle={puzzle} answer />
+        <div className="rounded-lg bg-emerald-50 p-4 ring-1 ring-emerald-100">
+          <p className="text-xs font-extrabold text-emerald-800">Answer key</p>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            {puzzle.placements.map((placement) => (
+              <div
+                key={placement.word}
+                className="flex items-center justify-between gap-3 rounded-md bg-white px-3 py-2 text-xs ring-1 ring-emerald-100"
               >
-                {w}
-              </span>
+                <span className="font-bold text-slate-800">{placement.word}</span>
+                <span className="text-slate-500">
+                  R{placement.start.r + 1}C{placement.start.c + 1} → R
+                  {placement.end.r + 1}C{placement.end.c + 1}
+                </span>
+              </div>
             ))}
           </div>
-          {puzzle.skipped.length > 0 ? (
-            <p className="mt-3 text-[11px] text-slate-500">
-              Some words were skipped because of length or placement limits:{' '}
-              {puzzle.skipped.join(', ')}
-            </p>
-          ) : null}
         </div>
       </div>
     </div>
@@ -237,7 +307,7 @@ function CrosswordSheet({ words }: { words: string[] }) {
           {wordBank.map((w) => (
             <span
               key={w}
-              className="rounded-lg bg-white px-3 py-1 text-sm text-slate-800 ring-1 ring-slate-300"
+              className="rounded-md bg-white px-3 py-1 text-sm text-slate-800 ring-1 ring-slate-300"
             >
               {w}
             </span>
@@ -254,6 +324,8 @@ function CrosswordSheet({ words }: { words: string[] }) {
 }
 
 export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
+  const wordSearchPuzzle = useMemo(() => generateWordSearch(words, 12), [words])
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -271,7 +343,7 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
       />
 
       <div className="worksheet-modal-panel absolute inset-x-0 bottom-0 top-3 mx-auto w-full max-w-6xl px-2 pb-3 sm:top-8 sm:px-4 sm:pb-6">
-        <div className="worksheet-modal-shell flex h-full flex-col overflow-hidden rounded-xl bg-[#f7f8fb] shadow-2xl ring-1 ring-slate-200">
+        <div className="worksheet-modal-shell flex h-full flex-col overflow-hidden rounded-lg bg-[#f7f8fb] shadow-2xl ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 border-b border-slate-200/70 bg-white px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6 print:hidden">
             <div>
               <p className="text-xs font-bold text-slate-500">미리보기</p>
@@ -282,14 +354,14 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
                 type="button"
                 onClick={() => window.print()}
                 disabled={!canGenerate}
-                className="flex-1 rounded-lg bg-slate-900 px-3 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-slate-200 sm:flex-none"
+                className="flex-1 rounded-md bg-slate-900 px-3 py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-slate-200 sm:flex-none"
               >
                 인쇄 / PDF 저장
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="grid h-10 w-10 place-items-center rounded-lg bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
+                className="grid h-10 w-10 place-items-center rounded-md bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
                 aria-label="닫기"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
@@ -304,7 +376,7 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
 
           <div className="worksheet-preview flex-1 overflow-auto bg-[#f7f8fb] px-3 py-4 sm:px-6 sm:py-5">
             {!canGenerate ? (
-              <div className="grid place-items-center rounded-xl bg-white p-8 text-center ring-1 ring-slate-200">
+              <div className="grid place-items-center rounded-lg bg-white p-8 text-center ring-1 ring-slate-200">
                 <p className="text-sm font-extrabold text-slate-900">
                   단어를 최소 {MIN_WORDS}개 이상 입력해주세요.
                 </p>
@@ -314,14 +386,17 @@ export function WorksheetModal({ title, words, canGenerate, onClose }: Props) {
               </div>
             ) : (
               <div className="worksheet-pages mx-auto flex w-full max-w-[860px] flex-col gap-6 py-2">
-                <PageFrame pageLabel="1/3" pageTitle="영어 단어 학습지">
+                <PageFrame pageLabel="1/4" pageTitle="영어 단어 학습지">
                   <TraceSheet words={words} />
                 </PageFrame>
-                <PageFrame pageLabel="2/3" pageTitle="Crossword Puzzle">
+                <PageFrame pageLabel="2/4" pageTitle="Crossword Puzzle">
                   <CrosswordSheet words={words} />
                 </PageFrame>
-                <PageFrame pageLabel="3/3" pageTitle="Word Search">
-                  <WordSearchSheet words={words} />
+                <PageFrame pageLabel="3/4" pageTitle="Word Search">
+                  <WordSearchSheet puzzle={wordSearchPuzzle} />
+                </PageFrame>
+                <PageFrame pageLabel="4/4" pageTitle="Word Search Answer">
+                  <WordSearchAnswerSheet puzzle={wordSearchPuzzle} />
                 </PageFrame>
               </div>
             )}

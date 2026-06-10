@@ -13,17 +13,9 @@ type Props = {
 
 function EmptyState() {
   return (
-    <div className="grid place-items-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center">
-      <div className="mb-3 grid h-11 w-11 place-items-center rounded-lg bg-white text-slate-400 ring-1 ring-slate-200">
-        <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M7 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9.5a1 1 0 0 0-.293-.707l-4.5-4.5A1 1 0 0 0 13.5 4H7Zm7 2.414L17.586 9H14a1 1 0 0 1-1-1V5.414Z"
-          />
-        </svg>
-      </div>
+    <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center">
       <p className="text-sm font-semibold text-slate-700">
-        단어를 입력하고 추가 버튼을 눌러주세요.
+        아직 추가된 단어가 없습니다.
       </p>
       <p className="mt-1 text-xs text-slate-500">
         최소 {MIN_WORDS}개, 최대 {MAX_WORDS}개까지 입력할 수 있습니다.
@@ -70,8 +62,8 @@ export function WordInputCard({
   }
 
   return (
-    <section className="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-      <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:px-5">
+    <section className="rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+      <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
           <h2 className="text-sm font-extrabold text-slate-900">{headerLabel}</h2>
           <p className="mt-1 text-xs text-slate-500">
@@ -83,7 +75,7 @@ export function WordInputCard({
           <button
             type="button"
             onClick={onClearAll}
-            className="rounded-lg px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus:ring-4 focus:ring-emerald-100"
+            className="self-start rounded-md px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-100 sm:self-auto"
           >
             전체 삭제
           </button>
@@ -95,7 +87,7 @@ export function WordInputCard({
           영어 단어 입력
         </label>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
           <textarea
             id={inputId}
             value={value}
@@ -107,7 +99,7 @@ export function WordInputCard({
               }
             }}
             placeholder="예: apple, banana, cat"
-            className="min-h-24 w-full resize-y rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-300 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 sm:min-h-11"
+            className="min-h-28 w-full resize-y rounded-md border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed outline-none transition placeholder:text-slate-400 focus:border-emerald-300 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 sm:min-h-24"
             disabled={!canAddMore}
             inputMode="text"
             autoComplete="off"
@@ -117,7 +109,7 @@ export function WordInputCard({
             type="button"
             onClick={handleAdd}
             disabled={!canAddMore || parsedWords.length === 0}
-            className="h-11 shrink-0 rounded-lg bg-emerald-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-emerald-100 sm:self-start"
+            className="h-11 rounded-md bg-emerald-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 active:translate-y-px disabled:cursor-not-allowed disabled:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-emerald-100 sm:h-full sm:min-h-24"
           >
             추가
           </button>
@@ -141,7 +133,7 @@ export function WordInputCard({
             type="button"
             onClick={onGenerate}
             disabled={!canGenerate}
-            className="w-full rounded-lg bg-slate-900 px-5 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-slate-800 active:translate-y-px disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none focus:outline-none focus:ring-4 focus:ring-slate-200"
+            className="w-full rounded-md bg-slate-900 px-5 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-slate-800 active:translate-y-px disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none focus:outline-none focus:ring-4 focus:ring-slate-200"
           >
             학습지 생성하기 ({words.length}개 단어)
           </button>

@@ -22,4 +22,3 @@ export function parseWordList(raw: string): string[] {
 export function formatWordCount(count: number) {
   return `${count}개 단어`
 }
-

@@ -82,8 +82,8 @@ function App() {
   const clearAll = () => setWords([])
 
   return (
-    <div className="min-h-dvh bg-[#f7f8fb] px-4 py-6 text-slate-800 sm:py-10 print:min-h-0 print:bg-white print:p-0">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 sm:gap-6 print:hidden">
+    <div className="min-h-dvh bg-[#f7f8fb] px-4 py-5 text-slate-800 sm:py-8 print:min-h-0 print:bg-white print:p-0">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 sm:gap-5 print:hidden">
         <PageHeader />
 
         <WordInputCard
@@ -102,12 +102,12 @@ function App() {
           onPick={addWord}
         />
 
-        <section className="rounded-xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 sm:px-5">
+        <section className="rounded-lg bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 sm:px-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="text-sm font-extrabold text-slate-900">수업 주제 빠른 추가</h3>
               <p className="mt-1 text-xs text-slate-500">
-                자주 쓰는 묶음을 눌러 빈칸 학습지 준비 시간을 줄여보세요.
+                자주 쓰는 단어 묶음을 눌러 학습지를 빠르게 준비하세요.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -117,7 +117,7 @@ function App() {
                   type="button"
                   disabled={words.length >= MAX_WORDS}
                   onClick={() => addQuickSet(set.words)}
-                  className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-100 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
+                  className="rounded-md bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-100 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-emerald-100"
                 >
                   {set.title}
                 </button>
