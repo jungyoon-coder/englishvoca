@@ -3,27 +3,30 @@ type Props = {
   onRemove: () => void
 }
 
-const EMOJIS = ['🍎', '🍌', '🐱', '🐶', '🐟', '🦁', '🐵', '🐯', '🐰', '🐘']
+const WORD_ICONS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
-function pickEmoji(word: string) {
+function pickIcon(word: string) {
   let hash = 0
   for (let i = 0; i < word.length; i++) hash = (hash * 31 + word.charCodeAt(i)) >>> 0
-  return EMOJIS[hash % EMOJIS.length]
+  return WORD_ICONS[hash % WORD_ICONS.length]
 }
 
 export function WordPill({ word, onRemove }: Props) {
-  const emoji = pickEmoji(word)
+  const icon = pickIcon(word)
 
   return (
-    <span className="group inline-flex items-center gap-2 rounded-full bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-100">
-      <span aria-hidden="true" className="text-sm">
-        {emoji}
+    <span className="inline-flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-100">
+      <span
+        aria-hidden="true"
+        className="grid h-5 w-5 place-items-center rounded bg-emerald-100 text-[11px] font-black text-emerald-700"
+      >
+        {icon}
       </span>
       <span className="tracking-wide">{word}</span>
       <button
         type="button"
         onClick={onRemove}
-        className="ml-1 grid h-6 w-6 place-items-center rounded-full text-slate-500 transition hover:bg-white hover:text-slate-800 focus:outline-none focus:ring-4 focus:ring-violet-100"
+        className="ml-1 grid h-6 w-6 place-items-center rounded-full text-slate-500 transition hover:bg-white hover:text-slate-800 focus:outline-none focus:ring-4 focus:ring-emerald-100"
         aria-label={`${word} 삭제`}
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
@@ -36,4 +39,3 @@ export function WordPill({ word, onRemove }: Props) {
     </span>
   )
 }
-

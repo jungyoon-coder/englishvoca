@@ -1,12 +1,12 @@
 function PaperIcon() {
   return (
     <div className="relative h-11 w-11">
-      <div className="absolute left-1 top-1 h-10 w-10 rotate-[-8deg] rounded-2xl bg-white shadow-sm ring-1 ring-slate-200" />
-      <div className="absolute left-2 top-2 h-10 w-10 rotate-[8deg] rounded-2xl bg-white shadow-md ring-1 ring-slate-200" />
-      <div className="absolute left-3 top-3 grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-md ring-1 ring-violet-200">
+      <div className="absolute left-1 top-1 h-10 w-10 rotate-[-6deg] rounded-xl bg-white shadow-sm ring-1 ring-slate-200" />
+      <div className="absolute left-2 top-2 h-10 w-10 rotate-[6deg] rounded-xl bg-white shadow-md ring-1 ring-slate-200" />
+      <div className="absolute left-3 top-3 grid h-10 w-10 place-items-center rounded-xl bg-emerald-600 shadow-md ring-1 ring-emerald-200">
         <svg
           viewBox="0 0 24 24"
-          className="h-5 w-5 text-white/95"
+          className="h-5 w-5 text-white"
           aria-hidden="true"
         >
           <path
@@ -21,19 +21,19 @@ function PaperIcon() {
 
 export function PageHeader() {
   return (
-    <header className="text-center">
-      <div className="mx-auto mb-4 flex justify-center">
+    <header className="rounded-xl bg-white px-5 py-5 shadow-sm ring-1 ring-slate-200 sm:px-6">
+      <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
         <PaperIcon />
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">
+            영어 단어 학습지 생성기
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+            수업 단어를 입력하면 따라쓰기, 십자말풀이, 단어 찾기 학습지를 바로 만들고
+            인쇄하거나 PDF로 저장할 수 있습니다.
+          </p>
+        </div>
       </div>
-
-      <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-        영어 학습지 생성기
-      </h1>
-      <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-        가르칠 영어 단어를 입력하면 따라쓰기, 크로스워드, 단어 찾기 학습지를 자동으로
-        만들어 드립니다.
-      </p>
     </header>
   )
 }
-
