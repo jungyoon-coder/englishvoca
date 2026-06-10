@@ -46,14 +46,14 @@ export function WordInputCard({
   }
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-[0_18px_60px_-42px_rgba(15,23,42,0.45)] ring-1 ring-slate-200/80 sm:p-6">
-      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_220px] lg:items-stretch">
+    <section className="rounded-3xl bg-white p-5 shadow-[0_24px_80px_-56px_rgba(15,23,42,0.55)] ring-1 ring-slate-200/70 sm:p-6">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_260px]">
         <div className="min-w-0">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <label htmlFor={inputId} className="text-sm font-semibold text-slate-900">
+            <label htmlFor={inputId} className="text-sm font-semibold text-slate-950">
               단어 입력
             </label>
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
               {words.length}/{MAX_WORDS}
             </span>
           </div>
@@ -67,8 +67,8 @@ export function WordInputCard({
               e.preventDefault()
               handleAdd()
             }}
-            placeholder={'apple, banana, cat\n또는 엑셀/문서의 단어 목록을 그대로 붙여넣으세요'}
-            className="min-h-40 w-full resize-y rounded-xl border-0 bg-slate-50 px-4 py-4 text-base leading-7 text-slate-900 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50 sm:min-h-44"
+            placeholder={'apple, banana, cat\n엑셀이나 문서의 단어 목록을 그대로 붙여넣으세요'}
+            className="min-h-44 w-full resize-y rounded-2xl border-0 bg-slate-50 px-4 py-4 text-base leading-7 text-slate-950 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
             disabled={!canAddMore}
             inputMode="text"
             autoComplete="off"
@@ -80,19 +80,24 @@ export function WordInputCard({
           </div>
         </div>
 
-        <aside className="flex flex-col justify-between rounded-xl bg-slate-950 p-4 text-white shadow-[0_18px_50px_-32px_rgba(15,23,42,0.7)]">
-          <div>
-            <p className="text-xs font-medium text-slate-400">다음 단계</p>
-            <p className="mt-2 text-2xl font-semibold tracking-tight">{words.length}개</p>
-            <p className="mt-1 text-xs leading-5 text-slate-400">
-              최소 {MIN_WORDS}개 이상이면 학습지를 만들 수 있습니다.
+        <aside className="rounded-2xl bg-blue-50 p-4 ring-1 ring-blue-100 sm:p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-blue-700">
+            Worksheet
+          </p>
+          <div className="mt-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-blue-100/70">
+            <p className="text-sm font-medium text-slate-500">선택한 단어</p>
+            <p className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">
+              {words.length}개
+            </p>
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              최소 {MIN_WORDS}개 이상 입력하면 바로 생성할 수 있습니다.
             </p>
           </div>
           <button
             type="button"
             onClick={onGenerate}
             disabled={!canGenerate}
-            className="mt-5 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 active:translate-y-px disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-200"
+            className="mt-4 w-full rounded-2xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white shadow-[0_14px_30px_-18px_rgba(37,99,235,0.9)] transition hover:bg-blue-500 active:translate-y-px disabled:cursor-not-allowed disabled:bg-blue-200 disabled:text-blue-500 disabled:shadow-none focus:outline-none focus:ring-4 focus:ring-blue-200"
           >
             학습지 생성하기
           </button>
@@ -101,7 +106,7 @@ export function WordInputCard({
 
       <div className="mt-5 min-h-12">
         {words.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-white px-4 py-4 text-sm text-slate-400">
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-4 text-sm text-slate-400">
             추가된 단어가 여기에 표시됩니다.
           </div>
         ) : (
